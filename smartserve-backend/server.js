@@ -22,6 +22,7 @@ app.use('/api/auth', require('./src/routes/auth'));
 app.use('/api/tenant', require('./src/routes/tenant'));
 app.use('/api/produto', require('./src/routes/produto'));
 app.use('/api/pedido', require('./src/routes/pedido'));
+app.use('/api/public', require('./src/routes/public'));
 
 // Rota de teste
 app.get('/', (req, res) => {
