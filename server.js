@@ -5,13 +5,54 @@ const cors = require('cors');
 
 const app = express();
 
+// Configuração CORS CORRIGIDA
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Lista de origens permitidas
+    const allowedOrigins = [
+      'https://smartservebr.com',
+      'https://www.smartservebr.com',
+      'http://localhost:3000',
+      'http://localhost:5173',
+      'http://localhost:8080'
+    ];
+    
+    // Permitir requisições sem origin (mobile apps, Postman, etc)
+    if (!origin) {
+      return callback(null, true);
+    }
+    
+    // Se FRONTEND_URL for *, permitir tudo
+    if (process.env.FRONTEND_URL === '*') {
+      return callback(null, true);
+    }
+    
+    // Verificar se a origin está na lista
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log('❌ Origin bloqueada:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  maxAge: 86400 // 24 horas
+};
+
+app.use(cors(corsOptions));
+
 // Middleware
-app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
-  credentials: true
-}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Log de requisições (útil para debug)
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path} - Origin: ${req.headers.origin || 'none'}`);
+  next();
+});
 
 // Conectar ao MongoDB
 mongoose.connect(process.env.MONGODB_URI)
@@ -34,7 +75,8 @@ app.get('/health', (req, res) => {
   res.json({ 
     status: 'ok', 
     timestamp: new Date().toISOString(),
-    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    cors: process.env.FRONTEND_URL || 'not set'
   });
 });
 
@@ -72,4 +114,6 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);
   console.log(`📍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🌐 CORS configurado para: ${process.env.FRONTEND_URL || '*'}`);
 });
+   
