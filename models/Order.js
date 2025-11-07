@@ -14,8 +14,12 @@ const orderSchema = new mongoose.Schema({
     telefone: {
       type: String,
       required: true
-    }
   },
+  endereco: {
+    type: String,
+    required: false
+  }
+},
   itens: [{
     produto: {
       type: mongoose.Schema.Types.ObjectId,
