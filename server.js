@@ -12,6 +12,7 @@ const corsOptions = {
     const allowedOrigins = [
       'https://smartservebr.com',
       'https://www.smartservebr.com',
+      'https://smartservebr-admin.netlify.app',
       'http://localhost:3000',
       'http://localhost:5173',
       'http://localhost:8080'
