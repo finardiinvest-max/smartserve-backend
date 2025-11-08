@@ -68,6 +68,8 @@ router.post('/', async (req, res) => {
     });
   } catch (error) {
     console.error('Erro ao criar pedido:', error);
+    console.error('Error details:', error.message);
+    console.error('Error stack:', error.stack);
     res.status(500).json({ error: 'Erro ao criar pedido.' });
   }
 });
