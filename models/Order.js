@@ -89,10 +89,17 @@ orderSchema.index({ dataHora: -1 });
 // Gerar número do pedido automaticamente
 orderSchema.pre('save', async function(next) {
   if (!this.numero) {
-    const count = await mongoose.model('Order').countDocuments();
-    this.numero = String(count + 1).padStart(4, '0');
+    try {
+      const count = await this.constructor.countDocuments();
+      this.numero = String(count + 1).padStart(4, '0');
+      next();
+    } catch (error) {
+      console.error('Erro ao gerar número do pedido:', error);
+      next(error);
+    }
+  } else {
+    next();
   }
-  next();
 });
 
 module.exports = mongoose.model('Order', orderSchema);
