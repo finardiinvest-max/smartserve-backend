@@ -18,7 +18,7 @@ const productSchema = new mongoose.Schema({
   categoria: {
     type: String,
     required: true,
-    enum: ['paes', 'doces', 'salgados', 'bebidas', 'bolos', 'pizzas', 'refeicoes', 'lanches', 'omeletes', 'bebidas-quentes', 'outros']
+    enum: ['paes', 'doces-e-bolos', 'salgados', 'bebidas', 'pizzas', 'refeicoes', 'lanches-e-beirutes', 'omeletes', 'bebidas-matinais', 'lanches-matinais']
   },
   imagemUrl: {
     type: String,
