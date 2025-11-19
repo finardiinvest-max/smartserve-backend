@@ -232,11 +232,6 @@ router.patch('/:id/confirmar-pix-admin', auth, async (req, res) => {
     order.pixConfirmadoPeloAdmin = true;
     order.dataConfirmacaoAdmin = new Date();
     order.statusPagamento = 'confirmado';
-    
-    // Se o pedido ainda está novo, muda para em preparo
-    if (order.statusPedido === 'novo') {
-      order.statusPedido = 'em_preparo';
-    }
 
     await order.save();
 
